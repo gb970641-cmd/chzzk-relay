@@ -1,16 +1,19 @@
 // api/index.js (on Vercel in icn1 region)
 export default async function handler(req, res) {
-  const { channelId, videoNo } = req.query;
+  const { channelId, videoNo, videoId, inKey } = req.query;
 
   let target = "";
-  if (videoNo) {
-    // Replay / VOD API
+  if (videoId && inKey) {
+    // Stage 2: Processed VOD API (Clean JSON)
+    target = `https://apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${videoId}?key=${inKey}`;
+  } else if (videoNo) {
+    // Stage 1: Chzzk Video Info API
     target = `https://api.chzzk.naver.com/service/v3/videos/${videoNo}`;
   } else if (channelId) {
-    // Live stream API
+    // Live Stream API
     target = `https://api.chzzk.naver.com/service/v2/channels/${channelId}/live-detail`;
   } else {
-    return res.status(400).json({ error: "Missing channelId or videoNo" });
+    return res.status(400).json({ error: "Missing required query parameters" });
   }
 
   try {

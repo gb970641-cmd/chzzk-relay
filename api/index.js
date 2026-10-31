@@ -4,19 +4,14 @@ export default async function handler(req, res) {
 
   let target = "";
   if (gameId) {
-    // Schedule API (Bypasses Naver WAF block)
     target = `https://api-gw.sports.naver.com/schedule/games/${gameId}`;
   } else if (vodGameId) {
-    // Game VOD list API
     target = `https://api-gw.sports.naver.com/video/game/${vodGameId}`;
   } else if (videoId && inKey) {
-    // Stage 2 Processed VOD
     target = `https://apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${videoId}?key=${inKey}`;
   } else if (videoNo) {
-    // Stage 1 Recent Replay
     target = `https://api.chzzk.naver.com/service/v3/videos/${videoNo}`;
   } else if (channelId) {
-    // Live Stream API
     target = `https://api.chzzk.naver.com/service/v2/channels/${channelId}/live-detail`;
   } else {
     return res.status(400).json({ error: "Missing required query parameters" });

@@ -1,17 +1,25 @@
-// api/index.js (on Vercel in icn1 region) 12MN
+// api/index.js (on Vercel in icn1 region) 1215MN
 export default async function handler(req, res) {
-  const { channelId, videoNo, videoId, inKey, inkey, channelVideos, vodGameId, gameId, searchKeyword, page } = req.query;
+  const { channelId, videoNo, videoId, inKey, inkey, channelVideos, vodGameId, gameId, searchKeyword } = req.query;
 
   let target = "";
   let referer = "https://chzzk.naver.com/";
+  let userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
   const finalKey = inKey || inkey;
-  const pageNum = page || 0;
 
-  if (searchKeyword) {
+  if (gameId) {
+    target = `https://api-gw.sports.naver.com/schedule/games/${gameId}`;
+    referer = "https://m.sports.naver.com/";
+    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1";
+  } else if (vodGameId) {
+    target = `https://api-gw.sports.naver.com/video/game/${vodGameId}`;
+    referer = "https://m.sports.naver.com/";
+    userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1";
+  } else if (searchKeyword) {
     target = `https://api.chzzk.naver.com/service/v1/search/videos?keyword=${encodeURIComponent(searchKeyword)}&size=30&offset=0`;
     referer = "https://chzzk.naver.com/";
   } else if (channelVideos) {
-    target = `https://api.chzzk.naver.com/service/v1/channels/${channelVideos}/videos?sortType=LATEST&pagingType=PAGE&page=${pageNum}&size=50`;
+    target = `https://api.chzzk.naver.com/service/v1/channels/${channelVideos}/videos?sortType=LATEST&pagingType=PAGE&page=0&size=50`;
     referer = "https://chzzk.naver.com/";
   } else if (videoId && finalKey) {
     target = `https://apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${videoId}?key=${finalKey}`;
@@ -22,12 +30,6 @@ export default async function handler(req, res) {
   } else if (channelId) {
     target = `https://api.chzzk.naver.com/service/v2/channels/${channelId}/live-detail`;
     referer = "https://chzzk.naver.com/";
-  } else if (gameId) {
-    target = `https://api-gw.sports.naver.com/schedule/games/${gameId}`;
-    referer = "https://m.sports.naver.com/";
-  } else if (vodGameId) {
-    target = `https://api-gw.sports.naver.com/video/game/${vodGameId}`;
-    referer = "https://m.sports.naver.com/";
   } else {
     return res.status(400).json({ error: "Missing parameters" });
   }
@@ -35,7 +37,7 @@ export default async function handler(req, res) {
   try {
     const response = await fetch(target, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+        "User-Agent": userAgent,
         "Referer": referer,
         "Accept": "application/json, text/plain, */*"
       }

@@ -5,16 +5,15 @@ export default async function handler(req, res) {
   let target = "";
   let referer = "https://chzzk.naver.com/";
 
-  if (channelVideos) {
-    // Max 50 items per page on Chzzk
-    target = `https://api.chzzk.naver.com/service/v1/channels/${channelVideos}/videos?sortType=LATEST&pagingType=PAGE&page=0&size=50`;
-    referer = "https://chzzk.naver.com/";
+  if (gameId) {
+    target = `https://api-gw.sports.naver.com/schedule/games/${gameId}`;
+    referer = "https://sports.naver.com/";
   } else if (vodGameId) {
     target = `https://api-gw.sports.naver.com/video/game/${vodGameId}`;
     referer = "https://sports.naver.com/";
-  } else if (gameId) {
-    target = `https://api-gw.sports.naver.com/schedule/games/${gameId}`;
-    referer = "https://sports.naver.com/";
+  } else if (channelVideos) {
+    target = `https://api.chzzk.naver.com/service/v1/channels/${channelVideos}/videos?sortType=LATEST&pagingType=PAGE&page=0&size=50`;
+    referer = "https://chzzk.naver.com/";
   } else if (videoId && inKey) {
     target = `https://apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${videoId}?key=${inKey}`;
     referer = "https://chzzk.naver.com/";

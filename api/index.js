@@ -1,4 +1,4 @@
-// api/index.js (on Vercel in icn1 region) 1035PM
+// api/index.js (on Vercel in icn1 region) 1056PM
 export default async function handler(req, res) {
   const { channelId, videoNo, videoId, inKey, inkey, channelVideos, vodGameId, gameId } = req.query;
 

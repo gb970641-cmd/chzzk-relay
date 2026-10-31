@@ -1,22 +1,22 @@
-// api/index.js (on Vercel in icn1 region) 5:15 PM
+// api/index.js (on Vercel in icn1 region) 9:28 PM
 export default async function handler(req, res) {
-  const { channelId, videoNo, videoId, inKey, channelVideos, vodGameId, gameId } = req.query;
+  const { channelId, videoNo, videoId, inKey, inkey, channelVideos, vodGameId, gameId } = req.query;
 
   let target = "";
   let referer = "https://chzzk.naver.com/";
+  const finalKey = inKey || inkey;
 
   if (gameId) {
     target = `https://api-gw.sports.naver.com/schedule/games/${gameId}`;
-    referer = "https://sports.naver.com/";
+    referer = "https://m.sports.naver.com/";
   } else if (vodGameId) {
     target = `https://api-gw.sports.naver.com/video/game/${vodGameId}`;
-    referer = "https://sports.naver.com/";
+    referer = "https://m.sports.naver.com/";
   } else if (channelVideos) {
-    // Only fetch full match replays, filtering out shorts and clips
     target = `https://api.chzzk.naver.com/service/v1/channels/${channelVideos}/videos?sortType=LATEST&pagingType=PAGE&page=0&size=50&videoType=REPLAY`;
     referer = "https://chzzk.naver.com/";
-  } else if (videoId && inKey) {
-    target = `https://apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${videoId}?key=${inKey}`;
+  } else if (videoId && finalKey) {
+    target = `https://apis.naver.com/rmcnmv/rmcnmv/vod/play/v2.0/${videoId}?key=${finalKey}`;
     referer = "https://chzzk.naver.com/";
   } else if (videoNo) {
     target = `https://api.chzzk.naver.com/service/v3/videos/${videoNo}`;
@@ -33,6 +33,7 @@ export default async function handler(req, res) {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
         "Referer": referer,
+        "Origin": "https://m.sports.naver.com",
         "Accept": "application/json, text/plain, */*"
       }
     });

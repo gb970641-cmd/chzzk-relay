@@ -1,4 +1,4 @@
-// api/index.js (on Vercel in icn1 region) 1145PM
+// api/index.js (on Vercel in icn1 region) 12MN
 export default async function handler(req, res) {
   const { channelId, videoNo, videoId, inKey, inkey, channelVideos, vodGameId, gameId, searchKeyword, page } = req.query;
 
@@ -8,7 +8,6 @@ export default async function handler(req, res) {
   const pageNum = page || 0;
 
   if (searchKeyword) {
-    // Priority #1: Search Chzzk globally by gameId
     target = `https://api.chzzk.naver.com/service/v1/search/videos?keyword=${encodeURIComponent(searchKeyword)}&size=30&offset=0`;
     referer = "https://chzzk.naver.com/";
   } else if (channelVideos) {
